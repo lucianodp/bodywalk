@@ -1,18 +1,10 @@
-from typing import Generator, Union
+from typing import Generator
 
 import numpy as np
 from numpy.typing import ArrayLike
 
+from .utils import RandomStateLike, check_random_state
 from ..geometry import ConvexBody
-
-
-RandomStateLike = Union[None, int, np.random.RandomState]
-
-
-def check_random_state(random_state: RandomStateLike) -> np.random.RandomState:
-    if isinstance(random_state, np.random.RandomState):
-        return random_state
-    return np.random.RandomState(random_state)
 
 
 def hit_and_run(body: ConvexBody,
