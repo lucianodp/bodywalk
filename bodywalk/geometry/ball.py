@@ -40,12 +40,16 @@ class Ball(ConvexBody):
     def radius(self) -> float:
         return self._radius
 
+    def is_inside(self, x: np.ndarray) -> bool:
+        diff = x - self.center
+        return diff.dot(diff) <= self.radius * self.radius
+
     def compute_intersection_extremes(self, x: np.ndarray, v: np.ndarray) -> Tuple[float, float]:
-        disp = self._center - x
+        disp = self.center - x
 
         a = v.dot(v)
         b = v.dot(disp)
-        c = disp.dot(disp) - self._radius * self._radius
+        c = disp.dot(disp) - self.radius * self.radius
 
         return self.__solve_second_degree_equation(a, b, c)
 

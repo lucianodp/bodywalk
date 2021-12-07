@@ -8,6 +8,8 @@ from bodywalk.geometry import Polytope, Ball
 
 TRIANGLE = Polytope([[-1, 0], [0, -1], [1, 1]], [0, 0, 1])
 DIAMOND = Polytope([[1, 1], [1, -1], [-1, -1], [-1, 1]], [1, 1, 1, 1])
+UNIT_BALL = Ball(np.zeros(2), 1)
+GENERAL_BALL = Ball([1, 2], 3)
 
 
 class ConvexBodyTestClass:
@@ -35,6 +37,20 @@ class TestPolytope(ConvexBodyTestClass):
         with pytest.raises(ValueError):
             Polytope(A=[[1, 2], [3, 4]], b=[5])
 
+    @pytest.mark.parametrize("pol, x, is_inside", [
+        (TRIANGLE, [0.2, 0.5], True),  # interior
+        (TRIANGLE, [0.4, 0.5], True),  # interior
+        (TRIANGLE, [0.8, 0.1], True),  # interior
+        (TRIANGLE, [0, 0], True),  # edge
+        (TRIANGLE, [1, 0], True),  # edge
+        (TRIANGLE, [0, 1], True),  # edge
+        (TRIANGLE, [-0.1, 0.5], False),  # outside
+        (TRIANGLE, [0.1, -0.5], False),  # outside
+        (TRIANGLE, [0.6, 0.6], False),  # outside
+    ])
+    def test_is_inside(self, pol, x, is_inside):
+        assert pol.is_inside(x) == is_inside
+
     @pytest.mark.parametrize("pol, x, v, expected_lower, expected_upper", [
         (TRIANGLE, [0.2, 0.7], [1, 0], -0.2, 0.1),
         (TRIANGLE, [0.8, 0.1], [0, -2], -0.05, 0.05),
@@ -56,13 +72,23 @@ class TestBall(ConvexBodyTestClass):
         with pytest.raises(ValueError):
             Ball(np.zeros(2), 0)
 
+    @pytest.mark.parametrize("ball, x, is_inside", [
+        (UNIT_BALL, [0.2, 0.5], True), # interior
+        (UNIT_BALL, [1, 0], True),     # boundary
+        (UNIT_BALL, [0, -2], False),   # exterior
+        (GENERAL_BALL, [3, 4], True),   # interior
+        (GENERAL_BALL, [4, 2], True),   # boundary
+        (GENERAL_BALL, [5, -6], False), # exterior
+    ])
+    def test_is_inside(self, ball, x, is_inside):
+        assert ball.is_inside(x) == is_inside
+
     @pytest.mark.parametrize("ball, x, v, expected_lower, expected_upper", [
-        (Ball([0, 0], 1), [0, 0], [1, 0], -1, 1),
-        (Ball([0, 0], 1), [0, 0], [0, 2], -0.5, 0.5),
-        (Ball([0, 0], 1), [0, 0], [-3, 4], -0.2, 0.2),
-        (Ball([0, 0], 3), [0, 0], [3, -4], -0.6, 0.6),
-        (Ball([-2, -3], 2), [-2, -3], [-3, -4], -0.4, 0.4),
-        (Ball([1, 2], 3), [2, 3], [-1, 2], -1.4, 1),
+        (UNIT_BALL, [0, 0], [1, 0], -1, 1),
+        (UNIT_BALL, [0, 0], [0, 2], -0.5, 0.5),
+        (UNIT_BALL, [0, 0], [-3, 4], -0.2, 0.2),
+        (GENERAL_BALL, [1, 2], [-3, -4], -0.6, 0.6),
+        (GENERAL_BALL, [2, 3], [-1, 2], -1.4, 1),
     ])
     def test_compute_intersection(self, ball, x, v, expected_lower, expected_upper):
         super().test_compute_intersection(ball, x, v, expected_lower, expected_upper)

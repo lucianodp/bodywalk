@@ -51,8 +51,11 @@ class Polytope(ConvexBody):
     def b(self) -> np.ndarray:
         return self._b
 
+    def is_inside(self, x: np.ndarray) -> bool:
+        return (self.A.dot(x) <= self.b).all()
+
     def compute_intersection_extremes(self, x: np.ndarray, v: np.ndarray) -> Tuple[float, float]:
-        thresholds = (self._b - self._A.dot(x)) / self._A.dot(v)
+        thresholds = (self.b - self.A.dot(x)) / self.A.dot(v)
 
         lower = np.where(thresholds < 0, thresholds, -np.inf).max()
         upper = np.where(thresholds > 0, thresholds, +np.inf).min()

@@ -7,8 +7,23 @@ import numpy as np
 class ConvexBody(ABC):
     """Abstract class representing a general convex body in the euclidean space, R^n.
     You can define your own convex bodies by directly subclassing ConvexBody and implementing
-    any required abstract methods.
+    the required abstract methods.
     """
+
+    @abstractmethod
+    def is_inside(self, x: np.ndarray) -> bool:
+        """Check if a data point is inside the convex body
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Data point to verify membership
+
+        Returns
+        -------
+        bool
+            True if x is inside this convex body (self); False otherwise
+        """
 
     @abstractmethod
     def compute_intersection_extremes(self, x: np.ndarray, v: np.ndarray) -> Tuple[float, float]:

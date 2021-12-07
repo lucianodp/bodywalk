@@ -31,6 +31,6 @@ def hit_and_run(body: ConvexBody,
         if lower >= upper:
             raise ValueError(f"Lower extreme must be smaller than upper extreme, but {lower} >= {upper}")
 
-        sample = sample + random_state.uniform(lower, upper) * random_direction
+        sample += random_state.uniform(lower, upper) * random_direction
 
-        yield sample
+        yield sample.copy()  # return a copy because 'sample' is modified at every iteration
