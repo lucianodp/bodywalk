@@ -1,16 +1,18 @@
-from typing import Generator
+from functools import partial
 
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .utils import RandomStateLike, check_random_state
+from .markov import MarkovChain, generate_markov_chain
+from .utils import RandomStateLike
+
 from ..geometry import ConvexBody
 
 
 def ball_walk(body: ConvexBody,
               initial_point: ArrayLike,
               random_state: RandomStateLike = None,
-              delta: float = 1) -> Generator[np.ndarray, None, None]:
+              delta: float = 1) -> MarkovChain:
     """Generate a Markov Chain inside a convex body converging to the uniform distribution
     via the Ball Walk algorithm.
 
@@ -51,20 +53,27 @@ def ball_walk(body: ConvexBody,
     if delta <= 0:
         raise ValueError(f"Expected a positive value for 'delta', but got {delta}")
 
-    random_state = check_random_state(random_state)
-
-    sample = np.array(initial_point, dtype='float', copy=True)
-
-    while True:
-        sample_candidate = sample_uniformly_from_ball(sample, delta, random_state)
-
-        if body.is_inside(sample_candidate):
-            sample = sample_candidate
-
-        yield sample
+    step_function = partial(ball_walk_step, delta=delta)
+    return generate_markov_chain(step_function, body, initial_point, random_state)
 
 
-def sample_uniformly_from_ball(center: np.array, radius: float, random_state: np.random.RandomState):
+def ball_walk_step(body: ConvexBody,
+                   sample: np.ndarray,
+                   random_state: np.random.RandomState,
+                   delta: float) -> np.ndarray:
+    """Performs the ball walk algorithm step
+    """
+    sample_candidate = sample_uniformly_from_ball(sample, delta, random_state)
+
+    if body.is_inside(sample_candidate):
+        sample = sample_candidate
+
+    return sample
+
+
+def sample_uniformly_from_ball(center: np.array,
+                               radius: float,
+                               random_state: np.random.RandomState) -> np.ndarray:
     """Computes a uniformly random sample from a ball of given center and radius.
     """
     exp = 1 / center.shape[0]

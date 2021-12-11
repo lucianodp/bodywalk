@@ -1,15 +1,15 @@
-from typing import Generator
-
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .utils import RandomStateLike, check_random_state
+from bodywalk.sampling.markov import MarkovChain, generate_markov_chain
+
+from .utils import RandomStateLike
 from ..geometry import ConvexBody
 
 
 def hit_and_run(body: ConvexBody,
                 initial_point: ArrayLike,
-                random_state: RandomStateLike = None) -> Generator[np.ndarray, None, None]:
+                random_state: RandomStateLike = None) -> MarkovChain:
     """Generate a Markov Chain inside a convex body converging to the uniform distribution
     via the Hit-and-Run Walk algorithm.
 
@@ -45,17 +45,14 @@ def hit_and_run(body: ConvexBody,
             Technical Report. 2003.
             https://web.cs.elte.hu/~lovasz/logcon-hitrun.pdf
     """
-    random_state = check_random_state(random_state)
+    return generate_markov_chain(hit_and_run_step, body, initial_point, random_state)
 
-    sample = np.array(initial_point, dtype='float', copy=True)
 
-    while True:
-        random_direction = random_state.normal(size=sample.shape)
+def hit_and_run_step(body: ConvexBody, sample: np.ndarray, random_state: np.random.RandomState) -> np.ndarray:
+    random_direction = random_state.normal(size=sample.shape)
 
-        lower, upper = body.compute_intersection_extremes(sample, random_direction)
-        if lower >= upper:
-            raise ValueError(f"Lower extreme must be smaller than upper extreme, but {lower} >= {upper}")
+    lower, upper = body.compute_intersection_extremes(sample, random_direction)
+    if lower >= upper:
+        raise ValueError(f"Lower extreme must be smaller than upper extreme, but {lower} >= {upper}")
 
-        sample += random_state.uniform(lower, upper) * random_direction
-
-        yield sample.copy()  # return a copy because 'sample' is modified at every iteration
+    return sample + random_state.uniform(lower, upper) * random_direction

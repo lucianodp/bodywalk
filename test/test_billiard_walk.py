@@ -3,7 +3,7 @@ import pytest
 
 import numpy as np
 
-from bodywalk.geometry import ConvexBody, Polytope
+from bodywalk.geometry import Polytope
 from bodywalk.sampling import billiard_walk
 
 
