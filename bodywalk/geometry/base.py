@@ -15,6 +15,16 @@ class ConvexBody(ABC):
     for a list of all methods it needs implemented.
     """
 
+    @property
+    def dim(self) -> int:
+        """
+        Returns
+        -------
+        int
+            Return the dimensionality of the underlying euclidean space
+        """
+        raise NotImplementedError("'dim' property must be implemented to run the Billiard Walk sampler.")
+
     def is_inside(self, x: np.ndarray) -> bool:
         """Check if a data point is inside this convex body (self).
 

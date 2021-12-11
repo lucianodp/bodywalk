@@ -13,6 +13,9 @@ GENERAL_BALL = Ball([1, 2], 3)
 
 
 class ConvexBodyTestClass:
+    def test_dim(self, body, expected_dim):
+        assert body.dim == expected_dim
+
     def test_compute_intersection(self, body, x, v, expected_lower, expected_upper):
         lower, upper = body.compute_intersection_extremes(np.array(x), np.array(v))
 
@@ -45,6 +48,14 @@ class TestPolytope(ConvexBodyTestClass):
     def test_incompatible_dimensions_for_A_and_b_throws_exception(self):
         with pytest.raises(ValueError):
             Polytope(A=[[1, 2], [3, 4]], b=[5])
+
+    @pytest.mark.parametrize("body, expected_dim", [
+        (TRIANGLE, 2),
+        (DIAMOND, 2),
+        (Polytope([[1, 2, 3]], [4]), 3)
+     ])
+    def test_dim(self, body, expected_dim):
+        return super().test_dim(body, expected_dim)
 
     @pytest.mark.parametrize("pol, x, is_inside", [
         (TRIANGLE, [0.2, 0.5], True),  # interior
@@ -88,6 +99,14 @@ class TestBall(ConvexBodyTestClass):
     def test_zero_radius_throws_exception(self):
         with pytest.raises(ValueError):
             Ball(np.zeros(2), 0)
+
+    @pytest.mark.parametrize("body, expected_dim", [
+        (UNIT_BALL, 2),
+        (GENERAL_BALL, 2),
+        (Ball([0, 1, 2], 1.5), 3)
+    ])
+    def test_dim(self, body, expected_dim):
+        return super().test_dim(body, expected_dim)
 
     @pytest.mark.parametrize("ball, x, is_inside", [
         (UNIT_BALL, [0.2, 0.5], True), # interior

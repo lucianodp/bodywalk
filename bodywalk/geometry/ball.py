@@ -33,6 +33,10 @@ class Ball(ConvexBody):
         self._radius = radius
 
     @property
+    def dim(self) -> int:
+        return self.center.shape[0]
+
+    @property
     def center(self) -> np.ndarray:
         return self._center
 

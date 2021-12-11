@@ -52,6 +52,10 @@ class Polytope(ConvexBody):
     def b(self) -> np.ndarray:
         return self._b
 
+    @property
+    def dim(self) -> int:
+        return self.A.shape[1]
+
     def is_inside(self, x: np.ndarray) -> bool:
         return (self.A.dot(x) <= self.b).all()
 
