@@ -17,7 +17,7 @@ class TestHitAndRun:
 
         chain = hit_and_run(body, np.zeros(2))
 
-        with pytest.raises(ValueError):
+        with pytest.raises(RuntimeError):
             next(chain)
 
     def test_exception_is_raised_if_lower_extreme_equals_upper(self):
@@ -26,7 +26,7 @@ class TestHitAndRun:
 
         chain = hit_and_run(body, np.zeros(2))
 
-        with pytest.raises(ValueError):
+        with pytest.raises(RuntimeError):
             next(chain)
 
     def test_equal_seeds_return_identical_chains(self):
