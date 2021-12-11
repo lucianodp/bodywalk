@@ -12,7 +12,7 @@ class ConvexBody(ABC):
 
     @abstractmethod
     def is_inside(self, x: np.ndarray) -> bool:
-        """Check if a data point is inside the convex body
+        """Check if a data point is inside this convex body (self)
 
         Parameters
         ----------
@@ -27,16 +27,18 @@ class ConvexBody(ABC):
 
     @abstractmethod
     def compute_intersection_extremes(self, x: np.ndarray, v: np.ndarray) -> Tuple[float, float]:
-        """Computes the pair of numbers (lower, upper) corresponding to the extremes of line segment resulting of
-        the interesection between this convex body (self) and the straight line L = {x + t * v}.
-        In other words, "x + t * v" is inside this convex body if, and only if, L <= t <= U.
+        """Given an interior point "x" and a direction vector "v", this method computes the
+        intersection between the straight line {x + t * v} and this convex body (self). More precisely,
+        this method returns a pair of numbers (L, U) satisfying:
+
+                "x + t * v" is inside this convex body (self)  <=>  L <= t <= U.
 
         Parameters
         ----------
         x : np.ndarray
-            A point on the line. It is guaranteed to be *inside* this convex body (self).
+            The line's starting point. It is guaranteed to be inside the convex body (self)
         v : np.ndarray
-            The line's direction vector
+            The line's direction vector. It is NOT guaranteed to be normalized.
 
         Returns
         -------
@@ -46,15 +48,21 @@ class ConvexBody(ABC):
 
     @abstractmethod
     def compute_boundary_reflection(self, x: np.ndarray, v: np.ndarray) -> Tuple[np.ndarray, float]:
-        """For a given internal point x and direction v, this method computes where the straight
-        ray {x + tv, t > 0} hits the boundary of this convex body.
+        """Given an interior point "x" and a direction vector "v", this method computes where the ray
+        {x + tv, t > 0} hits the boundary of this convex body. More precisely, this method returns two
+        quantities describing the hit point:
+
+            1) Internal normal: a unit-vector perpendicular to the boundary at the hit point,
+                                and pointing inwards to the convex body.
+
+            2) Distance: the distance between "x" and the hit point
 
         Parameters
         ----------
         x : np.ndarray
-            An interior point to this convex body
+            The ray's starting point. It is guaranteed to be inside the convex body (self).
         v : np.ndarray
-            The direction vector of the ray (note that ||v|| = 1)
+            The ray's direction vector. It is guaranteed to have unit norm (i.e. ||v|| = 1)
 
         Returns
         -------

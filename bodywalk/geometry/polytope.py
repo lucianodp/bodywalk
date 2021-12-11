@@ -7,19 +7,20 @@ from .base import ConvexBody
 
 
 class Polytope(ConvexBody):
-    """Convex body defined by the intersection of multiple linear equations.
-    More precisely, a data point x belongs to a polytope pol(A, b) if:
+    """A polytope pol(A, b) is a convex body defined by a collection of linear inequalities. More precisely,
+    given a m x d matrix "A" and a m-dimensional vector "b", pol(A, b) corresponds to the set of all data
+    points "x" satisfying:
 
-                        A x <= b
+                A[i]^t x <= b[i], for all 1 <= i <= m
 
-    where "A" is a m x d matrix and "b" a m-dimensional vector.
+    or, more compactly, Ax <= b.
 
     Parameters
     ----------
     A : ArrayLike
-        The m x d matrix above
+        The m x d matrix of linear inequalities
     b : ArrayLike
-        The m-dimensional vector above
+        The m-dimensional vector bounding each linear inequalities
 
     Raises
     ------
@@ -55,7 +56,7 @@ class Polytope(ConvexBody):
         return (self.A.dot(x) <= self.b).all()
 
     def compute_intersection_extremes(self, x: np.ndarray, v: np.ndarray) -> Tuple[float, float]:
-        thresholds = (self.b - self.A.dot(x)) / self.A.dot(v)
+        thresholds = self.__compute_thresholds(x, v)
 
         lower = np.where(thresholds < 0, thresholds, -np.inf).max()
         upper = np.where(thresholds > 0, thresholds, +np.inf).min()
@@ -63,7 +64,7 @@ class Polytope(ConvexBody):
         return lower, upper
 
     def compute_boundary_reflection(self, x: np.ndarray, v: np.ndarray) -> Tuple[np.ndarray, float]:
-        thresholds = (self.b - self.A.dot(x)) / self.A.dot(v)
+        thresholds = self.__compute_thresholds(x, v)
         thresholds = np.where(thresholds > 0, thresholds, np.inf)
 
         idx = thresholds.argmin()
@@ -72,3 +73,6 @@ class Polytope(ConvexBody):
         internal_normal /= np.linalg.norm(internal_normal)
 
         return internal_normal, distance
+
+    def __compute_thresholds(self, x, v) -> np.ndarray:
+        return (self.b - self.A.dot(x)) / self.A.dot(v)
