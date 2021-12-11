@@ -19,6 +19,15 @@ class ConvexBodyTestClass:
         assert lower == pytest.approx(expected_lower)
         assert upper == pytest.approx(expected_upper)
 
+    def test_boundary_reflection(self, body, x, v, expected_normal, expected_dist):
+        x, v = np.array(x), np.array(v)
+
+        internal_normal, distance = body.compute_boundary_reflection(x, v)
+
+        np.testing.assert_allclose(np.array(internal_normal), expected_normal)
+        assert distance == pytest.approx(expected_dist)
+
+
 
 class TestPolytope(ConvexBodyTestClass):
     def test_one_dimensional_A_throws_exception(self):
@@ -62,6 +71,14 @@ class TestPolytope(ConvexBodyTestClass):
     def test_compute_intersection(self, pol, x, v, expected_lower, expected_upper):
         super().test_compute_intersection(pol, x, v, expected_lower, expected_upper)
 
+    @pytest.mark.parametrize("body, x, v, expected_normal, expected_dist", [
+        (TRIANGLE, [0.2, 0.4], [-1, 0], [1, 0], 0.2),
+        (TRIANGLE, [0.2, 0.4], [0, -1], [0, 1], 0.4),
+        (TRIANGLE, [0.2, 0.4], [0.6, 0.8], [-1/np.sqrt(2), -1/np.sqrt(2)], 2/7),
+    ])
+    def test_boundary_reflection(self, body, x, v, expected_normal, expected_dist):
+        return super().test_boundary_reflection(body, x, v, expected_normal, expected_dist)
+
 
 class TestBall(ConvexBodyTestClass):
     def test_negative_radius_throws_exception(self):
@@ -92,3 +109,11 @@ class TestBall(ConvexBodyTestClass):
     ])
     def test_compute_intersection(self, ball, x, v, expected_lower, expected_upper):
         super().test_compute_intersection(ball, x, v, expected_lower, expected_upper)
+
+    @pytest.mark.parametrize("body, x, v, expected_normal, expected_dist", [
+        (UNIT_BALL, [0, 0], [1, 0], [-1, 0], 1),
+        (UNIT_BALL, [0.3, -0.4], [0.6, -0.8], [-0.6, 0.8], 0.5),
+        (UNIT_BALL, [0.6, -0.3], [0.8, 0.6], [-1, 0], 0.5),
+    ])
+    def test_boundary_reflection(self, body, x, v, expected_normal, expected_dist):
+        return super().test_boundary_reflection(body, x, v, expected_normal, expected_dist)

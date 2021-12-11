@@ -43,3 +43,21 @@ class ConvexBody(ABC):
         Tuple[float, float]
             The pair (L, U) corresponding to the extremes of the line segment. L must be smaller than U.
         """
+
+    @abstractmethod
+    def compute_boundary_reflection(self, x: np.ndarray, v: np.ndarray) -> Tuple[np.ndarray, float]:
+        """For a given internal point x and direction v, this method computes where the straight
+        ray {x + tv, t > 0} hits the boundary of this convex body.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            An interior point to this convex body
+        v : np.ndarray
+            The direction vector of the ray (note that ||v|| = 1)
+
+        Returns
+        -------
+        Tuple[np.ndarray, float]
+            The internal normal vector at the hit point, and the distance to the hit point
+        """

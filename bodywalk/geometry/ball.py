@@ -58,3 +58,11 @@ class Ball(ConvexBody):
         """Finds the roots of the second degree equation ax^2 + 2bx + c = 0"""
         sq_delta = math.sqrt(b * b - a * c)
         return (b - sq_delta) / a, (b + sq_delta) / a
+
+    def compute_boundary_reflection(self, x: np.ndarray, v: np.ndarray) -> Tuple[np.ndarray, float]:
+        _, distance = self.compute_intersection_extremes(x, v)
+
+        hit_point = x + distance * v
+        internal_normal = (self.center - hit_point) / self.radius
+
+        return internal_normal, distance

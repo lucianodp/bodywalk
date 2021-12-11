@@ -61,3 +61,14 @@ class Polytope(ConvexBody):
         upper = np.where(thresholds > 0, thresholds, +np.inf).min()
 
         return lower, upper
+
+    def compute_boundary_reflection(self, x: np.ndarray, v: np.ndarray) -> Tuple[np.ndarray, float]:
+        thresholds = (self.b - self.A.dot(x)) / self.A.dot(v)
+        thresholds = np.where(thresholds > 0, thresholds, np.inf)
+
+        idx = thresholds.argmin()
+        distance = thresholds[idx]
+        internal_normal = -self.A[idx]
+        internal_normal /= np.linalg.norm(internal_normal)
+
+        return internal_normal, distance
