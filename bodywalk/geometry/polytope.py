@@ -7,9 +7,9 @@ from .base import ConvexBody
 
 
 class Polytope(ConvexBody):
-    """A polytope pol(A, b) is a convex body defined by a collection of linear inequalities. More precisely,
-    given a m x d matrix "A" and a m-dimensional vector "b", pol(A, b) corresponds to the set of all data
-    points "x" satisfying:
+    """A polytope pol(A, b) is a convex body defined by a collection of linear inequalities.
+    More precisely, given a m x d matrix "A" and a m-dimensional vector "b", pol(A, b)
+    corresponds to the set of all data points "x" satisfying:
 
                 A[i]^t x <= b[i], for all 1 <= i <= m
 

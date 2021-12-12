@@ -42,12 +42,14 @@ class ConvexBody(ABC):
         bool
             True if x is inside this convex body (self); False otherwise
         """
-        raise NotImplementedError("'is_inside' method must be implemented to run the Ball Walk sampler.")
+        raise NotImplementedError(
+            "'is_inside' method must be implemented to run the Ball Walk sampler."
+        )
 
     def compute_intersection_extremes(self, x: np.ndarray, v: np.ndarray) -> Tuple[float, float]:
         """Given an interior point "x" and a direction vector "v", this method computes the
-        intersection between the straight line {x + t * v} and this convex body (self). More precisely,
-        this method returns a pair of numbers (L, U) satisfying:
+        intersection between the straight line {x + t * v} and this convex body (self). More
+        precisely, this method returns a pair of numbers (L, U) satisfying:
 
                 "x + t * v" is inside this convex body (self)  <=>  L <= t <= U.
 
@@ -63,14 +65,17 @@ class ConvexBody(ABC):
         Returns
         -------
         Tuple[float, float]
-            The pair (L, U) corresponding to the extremes of the line segment. L must be smaller than U.
+            The pair (L, U) corresponding to the extremes of the line segment.
+            L must be smaller than U.
         """
-        raise NotImplementedError("'compute_intersection_extremes' method must be implemented to run the Hit-and-Run sampler.")
+        raise NotImplementedError(
+            "'compute_intersection_extremes' must be implemented to run the Hit-and-Run sampler."
+        )
 
     def compute_boundary_reflection(self, x: np.ndarray, v: np.ndarray) -> Tuple[np.ndarray, float]:
-        """Given an interior point "x" and a direction vector "v", this method computes where the ray
-        {x + tv, t > 0} hits the boundary of this convex body. More precisely, this method returns two
-        quantities describing the hit point:
+        """Given an interior point "x" and a direction vector "v", this method computes where the
+        ray {x + tv, t > 0} hits the boundary of this convex body. More precisely, this method
+        returns two quantities describing the hit point:
 
             1) Internal normal: a unit-vector perpendicular to the boundary at the hit point,
                                 and pointing inwards to the convex body.
@@ -91,4 +96,6 @@ class ConvexBody(ABC):
         Tuple[np.ndarray, float]
             The internal normal vector at the hit point, and the distance to the hit point
         """
-        raise NotImplementedError("'compute_boundary_reflection' method must be implemented to run the Billiard Walk sampler.")
+        raise NotImplementedError(
+            "'compute_boundary_reflection' must be implemented to run the Billiard Walk sampler."
+        )
