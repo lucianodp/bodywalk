@@ -17,8 +17,15 @@ def generate_markov_chain(step_function: StepFunction,
                           random_state: RandomStateLike = None) -> MarkovChain:
     """Generates a Markov Chain over a ConvexBody with the given configuration.
     """
+    sample = np.asarray(initial_point, dtype='float')
+
+    if sample.size != body.dim:
+        raise ValueError(
+            f"Convex body and initial sample have incompatible sizes: \
+              {body.dim} != {sample.size}"
+        )
+
     random_state = check_random_state(random_state)
-    sample = np.array(initial_point, dtype='float', copy=True)
 
     while True:
         sample = step_function(body, sample, random_state)

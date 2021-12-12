@@ -11,8 +11,14 @@ SQUARE = Polytope([[1, 0], [-1, 0], [0, 1], [0, -1]], [1, 1, 1, 1])
 
 
 class TestHitAndRun:
+    def test_exception_is_raised_if_initial_sample_and_body_have_incompatible_sizes(self):
+        with pytest.raises(ValueError):
+            chain = hit_and_run(SQUARE, np.zeros(3))
+            next(chain)
+
     def test_exception_is_raised_if_lower_extreme_larger_than_upper(self):
         body = MagicMock(spec=ConvexBody)
+        body.dim = 2
         body.compute_intersection_extremes.return_value = (1, -1)
 
         chain = hit_and_run(body, np.zeros(2))
@@ -22,6 +28,7 @@ class TestHitAndRun:
 
     def test_exception_is_raised_if_lower_extreme_equals_upper(self):
         body = MagicMock(spec=ConvexBody)
+        body.dim = 2
         body.compute_intersection_extremes.return_value = (1, 1)
 
         chain = hit_and_run(body, np.zeros(2))

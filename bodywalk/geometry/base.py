@@ -16,14 +16,16 @@ class ConvexBody(ABC):
     """
 
     @property
+    @abstractmethod
     def dim(self) -> int:
-        """
+        """Dimension of the euclidean space where this convex body is defined.
+        This property must be present in ALL subclasses.
+
         Returns
         -------
         int
             Return the dimensionality of the underlying euclidean space
         """
-        raise NotImplementedError("'dim' property must be implemented to run the Billiard Walk sampler.")
 
     def is_inside(self, x: np.ndarray) -> bool:
         """Check if a data point is inside this convex body (self).

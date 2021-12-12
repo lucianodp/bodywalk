@@ -11,6 +11,11 @@ SQUARE = Polytope([[1, 0], [-1, 0], [0, 1], [0, -1]], [0.5, 0.5, 0.5, 0.5])
 
 
 class TestBilliardWalk:
+    def test_exception_is_raised_if_initial_sample_and_body_have_incompatible_sizes(self):
+        with pytest.raises(ValueError):
+            chain = billiard_walk(SQUARE, np.zeros(3))
+            next(chain)
+
     def test_equal_seeds_return_identical_chains(self):
         seed = 1
         chain1 = billiard_walk(SQUARE, np.zeros(2), seed)
