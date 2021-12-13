@@ -3,53 +3,34 @@ import pytest
 
 import numpy as np
 
-from bodywalk.geometry import Polytope
 from bodywalk.sampling import billiard_walk
 
+from .base import SamplerTestClass, SQUARE
 
-SQUARE = Polytope([[1, 0], [-1, 0], [0, 1], [0, -1]], [0.5, 0.5, 0.5, 0.5])
 
-
-class TestBilliardWalk:
-    def test_exception_is_raised_if_initial_sample_and_body_have_incompatible_sizes(self):
-        with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, np.zeros(3))
-            next(chain)
-
-    def test_equal_seeds_return_identical_chains(self):
-        seed = 1
-        chain1 = billiard_walk(SQUARE, np.zeros(2), seed)
-        chain2 = billiard_walk(SQUARE, np.zeros(2), seed)
-
-        for _ in range(5):
-            np.testing.assert_allclose(next(chain1), next(chain2))
-
-    def test_None_seeds_return_distinct_chains(self):
-        seed = None
-        chain1 = billiard_walk(SQUARE, np.zeros(2), seed)
-        chain2 = billiard_walk(SQUARE, np.zeros(2), seed)
-
-        for _ in range(5):
-            assert (next(chain1) != next(chain2)).any()
+class TestBilliardWalk(SamplerTestClass):
+    @pytest.fixture(scope='class')
+    def sampler(self):
+        return billiard_walk
 
     def test_negative_tau_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, np.zeros(2), tau=-1)
+            chain = billiard_walk(SQUARE, [0, 0], tau=-1)
             next(chain)
 
     def test_zero_tau_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, np.zeros(2), tau=0)
+            chain = billiard_walk(SQUARE, [0, 0], tau=0)
             next(chain)
 
     def test_negative_max_reflections_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, np.zeros(2), max_reflections=-1)
+            chain = billiard_walk(SQUARE, [0, 0], max_reflections=-1)
             next(chain)
 
     def test_zero_max_reflections_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, np.zeros(2), max_reflections=0)
+            chain = billiard_walk(SQUARE, [0, 0], max_reflections=0)
             next(chain)
 
     def test_billiard_walk_over_square(self):
@@ -70,7 +51,7 @@ class TestBilliardWalk:
             1 / np.e,
         ])
 
-        chain = billiard_walk(SQUARE, np.zeros(2), random_state, tau)
+        chain = billiard_walk(SQUARE, [0, 0], random_state, tau)
         samples = [next(chain) for _ in range(4)]
 
         np.testing.assert_allclose(samples, np.array([
