@@ -29,6 +29,14 @@ class SamplerTestClass:
 
         assert not np.allclose(samples1, samples2)
 
+    def test_initial_sample_remains_unaltered_after_sampling(self, sampler):
+        initial_sample = np.zeros(2)
+
+        chain = sampler(SQUARE, initial_sample, random_state=1)
+        next(chain)
+
+        np.testing.assert_allclose(initial_sample, np.zeros(2))
+
     @pytest.mark.parametrize("body", [SQUARE, UNIT_BALL])
     def test_generated_samples_are_inside_the_convex_body(self, sampler, body):
         chain = sampler(body, [0, 0])
