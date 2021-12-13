@@ -25,7 +25,7 @@ def billiard_walk(body: ConvexBody,
         'compute_boundary_reflection' method.
     initial_point : ArrayLike
         The starting point for the Markov chain. It must be inside the convex body.
-    random_state : None (default), int, or np.random.RandomState instance
+    random_state : None (default), int, or np.random.Generator instance
         The random number generator instance. It can be specified in 3 ways:
             - None: creates a new RandomState instance with unspecified seed
             - int: seed to be used for the RNG. Allows for reproducibility.
@@ -67,7 +67,7 @@ def billiard_walk(body: ConvexBody,
 
 def billiard_walk_step_function(body: ConvexBody,
                     sample: np.ndarray,
-                    random_state: np.random.RandomState,
+                    random_state: np.random.Generator,
                     tau: float,
                     max_reflections: int) -> np.ndarray:
     """Generates the next Billiard Walk sample
@@ -75,9 +75,9 @@ def billiard_walk_step_function(body: ConvexBody,
     candidate_sample = None
 
     while candidate_sample is None:
-        trajectory_length = -tau * np.log(random_state.rand())
+        trajectory_length = -tau * np.log(random_state.random())
 
-        direction = random_state.normal(size=sample.shape)
+        direction = random_state.standard_normal(size=sample.shape)
         direction /= np.linalg.norm(direction)
 
         candidate_sample = run_billiard_trajectory(body, sample, direction, trajectory_length, max_reflections)

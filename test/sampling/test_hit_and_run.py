@@ -35,8 +35,8 @@ class TestHitAndRun(SamplerTestClass):
             next(chain)
 
     def test_hit_and_run_over_square(self):
-        random_state = MagicMock(spec=np.random.RandomState)
-        random_state.normal.side_effect = np.array([
+        random_state = MagicMock(spec=np.random.Generator)
+        random_state.standard_normal.side_effect = np.array([
             [1, 0],
             [0, -1],
             [-1, 0],

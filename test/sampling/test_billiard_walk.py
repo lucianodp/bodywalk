@@ -32,15 +32,15 @@ class TestBilliardWalk(SamplerTestClass):
     def test_billiard_walk_over_square(self):
         tau = 0.5
 
-        random_state = MagicMock(spec=np.random.RandomState)
-        random_state.normal.side_effect = np.array([
+        random_state = MagicMock(spec=np.random.Generator)
+        random_state.standard_normal.side_effect = np.array([
             [4, 3],
             [-3, -4],
             [-4, 3],
             [3, -4],
         ], dtype='float')
 
-        random_state.rand.side_effect = np.array([
+        random_state.random.side_effect = np.array([
             1 / np.e ** 4,
             1 / np.e ** 3,
             1 / np.e ** 2,

@@ -7,7 +7,7 @@ from .utils import RandomStateLike, check_random_state
 from ..geometry import ConvexBody
 
 
-StepFunction = Callable[[ConvexBody, np.ndarray, np.random.RandomState], np.ndarray]
+StepFunction = Callable[[ConvexBody, np.ndarray, np.random.Generator], np.ndarray]
 MarkovChain = Generator[np.ndarray, None, None]
 
 
@@ -33,7 +33,7 @@ def generate_markov_chain(step_function: StepFunction,
 def _generate_markov_chain(step_function: StepFunction,
                            body: ConvexBody,
                            initial_point: np.ndarray,
-                           random_state: np.random.RandomState) -> MarkovChain:
+                           random_state: np.random.Generator) -> MarkovChain:
     sample = initial_point
 
     while True:

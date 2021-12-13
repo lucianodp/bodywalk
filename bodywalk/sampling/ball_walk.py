@@ -22,7 +22,7 @@ def ball_walk(body: ConvexBody,
         The convex body to sample from. It requires an implementation of the is_inside method.
     initial_point : ArrayLike
         The starting point for the Markov chain. It must be inside the convex body.
-    random_state : None (default), int, or np.random.RandomState instance
+    random_state : None (default), int, or np.random.Generator instance
         The random number generator instance. It can be specified in 3 ways:
             - None: creates a new RandomState instance with unspecified seed
             - int: seed to be used for the RNG. Allows for reproducibility.
@@ -59,7 +59,7 @@ def ball_walk(body: ConvexBody,
 
 def ball_walk_step(body: ConvexBody,
                    sample: np.ndarray,
-                   random_state: np.random.RandomState,
+                   random_state: np.random.Generator,
                    delta: float) -> np.ndarray:
     """Generates the next Ball Walk sample
     """
@@ -73,11 +73,11 @@ def ball_walk_step(body: ConvexBody,
 
 def sample_uniformly_from_ball(center: np.array,
                                radius: float,
-                               random_state: np.random.RandomState) -> np.ndarray:
+                               random_state: np.random.Generator) -> np.ndarray:
     """Computes a uniformly random sample from a ball of given center and radius.
     """
     exp = 1 / center.shape[0]
-    direction = random_state.normal(size=center.shape)
-    norm = (radius / np.linalg.norm(direction)) * random_state.rand() ** exp
+    direction = random_state.standard_normal(size=center.shape)
+    norm = (radius / np.linalg.norm(direction)) * random_state.random() ** exp
 
     return center + norm * direction

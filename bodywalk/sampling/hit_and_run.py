@@ -20,7 +20,7 @@ def hit_and_run(body: ConvexBody,
         compute_intersection_extremes method.
     initial_point : ArrayLike
         The starting point for the Markov chain. It must be inside the convex body.
-    random_state : None (default), int, or np.random.RandomState instance
+    random_state : None (default), int, or np.random.Generator instance
         The random number generator instance. It can be specified in 3 ways:
             - None: creates a new RandomState instance with unspecified seed
             - int: seed to be used for the RNG. Allows for reproducibility.
@@ -48,10 +48,10 @@ def hit_and_run(body: ConvexBody,
     return generate_markov_chain(hit_and_run_step, body, initial_point, random_state)
 
 
-def hit_and_run_step(body: ConvexBody, sample: np.ndarray, random_state: np.random.RandomState) -> np.ndarray:
+def hit_and_run_step(body: ConvexBody, sample: np.ndarray, random_state: np.random.Generator) -> np.ndarray:
     """Generates the next hit-and-run sample
     """
-    random_direction = random_state.normal(size=sample.shape)
+    random_direction = random_state.standard_normal(size=sample.shape)
 
     lower, upper = body.compute_intersection_extremes(sample, random_direction)
     if lower >= upper:

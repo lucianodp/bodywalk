@@ -24,15 +24,15 @@ class TestBallWalk(SamplerTestClass):
     def test_ball_walk_over_square(self):
         delta = 0.2
 
-        random_state = MagicMock(spec=np.random.RandomState)
-        random_state.normal.side_effect = np.array([
+        random_state = MagicMock(spec=np.random.Generator)
+        random_state.standard_normal.side_effect = np.array([
             [1, 0],
             [0, -1],
             [-1, 0],
             [0, 1],
         ])
 
-        random_state.rand.side_effect = [
+        random_state.random.side_effect = [
             0.16,
             0.25,
             0.64,
