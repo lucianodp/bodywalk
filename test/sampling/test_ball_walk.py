@@ -13,10 +13,6 @@ class TestBallWalk(SamplerTestClass):
     def sampler(self):
         return ball_walk
 
-    @pytest.fixture(scope='class')
-    def sampler_args(self):
-        return {'delta': 0.25}
-
     def test_negative_delta_throws_exception(self):
         with pytest.raises(ValueError):
             chain = ball_walk(SQUARE, [0, 0], delta=-1)
