@@ -32,10 +32,8 @@ def generate_markov_chain(step_function: StepFunction,
 
 def _generate_markov_chain(step_function: StepFunction,
                            body: ConvexBody,
-                           initial_point: np.ndarray,
+                           sample: np.ndarray,
                            random_state: np.random.Generator) -> MarkovChain:
-    sample = initial_point
-
     while True:
         sample = step_function(body, sample, random_state)
         yield sample
