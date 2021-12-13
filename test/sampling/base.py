@@ -11,8 +11,7 @@ UNIT_BALL = Ball([0, 0], 1)
 class SamplerTestClass:
     def test_exception_is_raised_if_initial_sample_and_convex_body_have_incompatible_dims(self, sampler):
         with pytest.raises(ValueError):
-            chain = sampler(SQUARE, [0, 0, 0])
-            next(chain)
+            sampler(SQUARE, [0, 0, 0])
 
     def test_equal_seeds_return_identical_chains(self, sampler):
         chain1 = sampler(SQUARE, [0, 0], random_state=1)

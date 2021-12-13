@@ -15,13 +15,11 @@ class TestBallWalk(SamplerTestClass):
 
     def test_negative_delta_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = ball_walk(SQUARE, [0, 0], delta=-1)
-            next(chain)
+            ball_walk(SQUARE, [0, 0], delta=-1)
 
     def test_zero_delta_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = ball_walk(SQUARE, [0, 0], delta=0)
-            next(chain)
+            ball_walk(SQUARE, [0, 0], delta=0)
 
     def test_ball_walk_over_square(self):
         delta = 0.2

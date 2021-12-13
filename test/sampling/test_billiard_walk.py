@@ -15,23 +15,19 @@ class TestBilliardWalk(SamplerTestClass):
 
     def test_negative_tau_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, [0, 0], tau=-1)
-            next(chain)
+            billiard_walk(SQUARE, [0, 0], tau=-1)
 
     def test_zero_tau_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, [0, 0], tau=0)
-            next(chain)
+            billiard_walk(SQUARE, [0, 0], tau=0)
 
     def test_negative_max_reflections_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, [0, 0], max_reflections=-1)
-            next(chain)
+            billiard_walk(SQUARE, [0, 0], max_reflections=-1)
 
     def test_zero_max_reflections_throws_exception(self):
         with pytest.raises(ValueError):
-            chain = billiard_walk(SQUARE, [0, 0], max_reflections=0)
-            next(chain)
+            billiard_walk(SQUARE, [0, 0], max_reflections=0)
 
     def test_billiard_walk_over_square(self):
         tau = 0.5
