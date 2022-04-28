@@ -5,7 +5,7 @@ import numpy as np
 
 from bodywalk.sampling import billiard_walk
 
-from .base import SamplerTestClass, SQUARE
+from base import SamplerTestClass, SQUARE
 
 
 class TestBilliardWalk(SamplerTestClass):

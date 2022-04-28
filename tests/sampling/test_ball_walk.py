@@ -5,7 +5,7 @@ import numpy as np
 
 from bodywalk.sampling import ball_walk
 
-from .base import SamplerTestClass, SQUARE
+from base import SamplerTestClass, SQUARE
 
 
 class TestBallWalk(SamplerTestClass):

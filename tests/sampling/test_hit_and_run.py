@@ -6,7 +6,7 @@ import numpy as np
 from bodywalk.geometry import ConvexBody
 from bodywalk.sampling import hit_and_run
 
-from .base import SamplerTestClass, SQUARE
+from base import SamplerTestClass, SQUARE
 
 
 class TestHitAndRun(SamplerTestClass):
