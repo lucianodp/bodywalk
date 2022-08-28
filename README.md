@@ -13,7 +13,7 @@ This module was tested using the following dependencies:
 - Pytest >= 6.2.5
 
 # License
-This project is released under the MIT license.
+This project is released under the BSD-3 Clause license.
 
 # References
 [1] L. Lovász. **An Algorithmic Theory of Numbers, Graphs and Convexity**, volume 50 of *CBMS-NSF Regional Conference Series in Applied Mathematics*. Society for Industrial and Applied Mathematics, 1986. ISBN 9781611970203.
