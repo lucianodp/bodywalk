@@ -6,6 +6,23 @@ uniformly over convex bodies. More precisely, this package offers the following 
 2) Support for general convex bodies, including rectangles, balls, and polytopes;
 3) Implementation of rounding techniques for improved mixing time.
 
+# Example
+```
+from bodywalk.sampling import ball_walk, billiard_walk, hit_and_run
+from bodywalk.geometry import Polytope
+
+convex_body = Polytope([[1, 0], [-1, 0], [0, 1], [0, -1]], [0.5]*4)  # Square of side 1 centered at (0, 0)
+initial_sample = [0, 0]  # Initial point to start the Markov Chain
+random_state = 42  # RNG seed
+
+chain = ball_walk(convex_body, initial_sample, delta=0.5, random_state=random_state)
+# chain = billiard_walk(convex_body, initial_sample, tau=0.5, random_state=random_state)
+# chain = hit_and_run(convex_body, initial_sample, random_state=random_state)
+
+for sample in chain:
+  # process the new generated sample
+```
+
 # Dependencies
 This module was tested using the following dependencies:
 - Python >= 3.9
