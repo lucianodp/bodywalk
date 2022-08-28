@@ -50,7 +50,7 @@ class TestHitAndRun(SamplerTestClass):
             -0.5,  # [-0.7, 0.3]
         ])
 
-        chain = hit_and_run(SQUARE, [0, 0], random_state)
+        chain = hit_and_run(SQUARE, [0, 0], random_state=random_state)
         samples = [next(chain) for _ in range(4)]
 
         np.testing.assert_allclose(samples, np.array([
