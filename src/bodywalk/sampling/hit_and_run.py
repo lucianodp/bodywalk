@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .markov import MarkovChain, generate_markov_chain
+from .markov import MarkovChain
 from .utils import RandomStateLike
 from ..geometry import ConvexBody
 
@@ -68,7 +68,7 @@ def hit_and_run(body: ConvexBody,
 
     step_function = partial(hit_and_run_step, rounding_matrix=rounding_matrix)
 
-    return generate_markov_chain(step_function, body, initial_point, random_state)
+    return MarkovChain(step_function, body, initial_point, random_state)
 
 
 def hit_and_run_step(body: ConvexBody, sample: np.ndarray, random_state: np.random.Generator, rounding_matrix: Optional[np.ndarray]) -> np.ndarray:

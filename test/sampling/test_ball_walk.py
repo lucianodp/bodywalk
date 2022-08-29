@@ -40,7 +40,7 @@ class TestBallWalk(SamplerTestClass):
         ]
 
         chain = ball_walk(SQUARE, [0, 0], random_state, delta)
-        samples = [next(chain) for _ in range(4)]
+        samples = chain.sample(4)
 
         np.testing.assert_allclose(samples, np.array([
             [ 0.08,  0.  ],

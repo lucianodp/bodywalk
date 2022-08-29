@@ -4,7 +4,7 @@ from typing import Optional
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .markov import MarkovChain, generate_markov_chain
+from .markov import MarkovChain
 from .utils import RandomStateLike
 
 from ..geometry import ConvexBody
@@ -62,7 +62,7 @@ def billiard_walk(body: ConvexBody,
         raise ValueError(f"max_reflections must be a positive integer, but got {max_reflections}")
 
     step_function = partial(billiard_walk_step_function, tau=tau, max_reflections=max_reflections)
-    return generate_markov_chain(step_function, body, initial_point, random_state)
+    return MarkovChain(step_function, body, initial_point, random_state)
 
 
 def billiard_walk_step_function(body: ConvexBody,

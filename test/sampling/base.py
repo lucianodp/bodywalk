@@ -17,15 +17,14 @@ class SamplerTestClass:
         chain1 = sampler(SQUARE, [0, 0], random_state=1)
         chain2 = sampler(SQUARE, [0, 0], random_state=1)
 
-        for _ in range(5):
-            np.testing.assert_allclose(next(chain1), next(chain2))
+        np.testing.assert_allclose(chain1.sample(5), chain2.sample(5))
 
     def test_distinct_seeds_return_distinct_chains(self, sampler):
         chain1 = sampler(SQUARE, [0, 0], random_state=1)
-        samples1 = np.array([next(chain1) for _ in range(5)])
+        samples1 =  chain1.sample(5)
 
         chain2 = sampler(SQUARE, [0, 0], random_state=2)
-        samples2 = np.array([next(chain2) for _ in range(5)])
+        samples2 = chain2.sample(5)
 
         assert not np.allclose(samples1, samples2)
 
@@ -33,13 +32,15 @@ class SamplerTestClass:
         initial_sample = np.zeros(2)
 
         chain = sampler(SQUARE, initial_sample, random_state=1)
-        next(chain)
+        chain.sample(1)
 
         np.testing.assert_allclose(initial_sample, np.zeros(2))
+        np.testing.assert_allclose(chain._initial_sample, np.zeros(2))
 
     @pytest.mark.parametrize("body", [SQUARE, UNIT_BALL])
     def test_generated_samples_are_inside_the_convex_body(self, sampler, body):
         chain = sampler(body, [0, 0])
+        samples = chain.sample(5)
 
-        for _ in range(5):
-            assert body.is_inside(next(chain))
+        for i in range(5):
+            assert body.is_inside(samples[i])

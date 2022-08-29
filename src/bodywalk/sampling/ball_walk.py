@@ -3,7 +3,7 @@ from functools import partial
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .markov import MarkovChain, generate_markov_chain
+from .markov import MarkovChain
 from .utils import RandomStateLike
 
 from ..geometry import ConvexBody
@@ -54,7 +54,7 @@ def ball_walk(body: ConvexBody,
         raise ValueError(f"Expected a positive value for 'delta', but got {delta}")
 
     step_function = partial(ball_walk_step, delta=delta)
-    return generate_markov_chain(step_function, body, initial_point, random_state)
+    return MarkovChain(step_function, body, initial_point, random_state)
 
 
 def ball_walk_step(body: ConvexBody,
