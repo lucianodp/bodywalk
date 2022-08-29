@@ -72,8 +72,8 @@ class TestHitAndRun(SamplerTestClass):
             -0.5,  # [-0.7, 0.3]
         ])
 
-        chain = hit_and_run(SQUARE, [0, 0], random_state=random_state)
-        samples = chain.sample(4)
+        chain = hit_and_run(SQUARE, [0, 0])
+        samples = chain.sample(4, random_state=random_state)
 
         np.testing.assert_allclose(samples, np.array([
             [0.2, 0.0],
@@ -83,11 +83,11 @@ class TestHitAndRun(SamplerTestClass):
         ]))
 
     def test_hit_and_run_with_identity_rounding_matrix_has_no_effect(self):
-        chain = hit_and_run(SQUARE, [0, 0], random_state=42)
-        samples_without_rounding = chain.sample(4)
+        chain = hit_and_run(SQUARE, [0, 0])
+        samples_without_rounding = chain.sample(4, random_state=42)
 
-        chain = hit_and_run(SQUARE, [0, 0], rounding_matrix=np.eye(2), random_state=42)
-        samples_with_rounding = chain.sample(4)
+        chain = hit_and_run(SQUARE, [0, 0], rounding_matrix=np.eye(2))
+        samples_with_rounding = chain.sample(4, random_state=42)
 
         assert np.allclose(samples_with_rounding, samples_without_rounding)
 
@@ -109,8 +109,8 @@ class TestHitAndRun(SamplerTestClass):
             -1.0,  # [-1.4, 0.6]
         ])
 
-        chain = hit_and_run(SQUARE, [0, 0], rounding_matrix=rounding_matrix, random_state=random_state)
-        samples = chain.sample(4)
+        chain = hit_and_run(SQUARE, [0, 0], rounding_matrix=rounding_matrix)
+        samples = chain.sample(4, random_state=random_state)
 
         np.testing.assert_allclose(samples, np.array([
             [0.2, 0.0],

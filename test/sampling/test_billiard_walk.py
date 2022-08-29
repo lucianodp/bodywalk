@@ -47,8 +47,8 @@ class TestBilliardWalk(SamplerTestClass):
             1 / np.e,
         ])
 
-        chain = billiard_walk(SQUARE, [0, 0], random_state, tau)
-        samples = chain.sample(4)
+        chain = billiard_walk(SQUARE, [0, 0], tau)
+        samples = chain.sample(4, random_state=random_state)
 
         np.testing.assert_allclose(samples, np.array([
             [-0.4, -0.2],  # len = 2.0, d = [0.8, 0.6]

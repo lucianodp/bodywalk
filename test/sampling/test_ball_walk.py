@@ -39,8 +39,8 @@ class TestBallWalk(SamplerTestClass):
             0.81,
         ]
 
-        chain = ball_walk(SQUARE, [0, 0], random_state, delta)
-        samples = chain.sample(4)
+        chain = ball_walk(SQUARE, [0, 0], delta)
+        samples = chain.sample(4, random_state=random_state)
 
         np.testing.assert_allclose(samples, np.array([
             [ 0.08,  0.  ],

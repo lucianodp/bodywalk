@@ -14,24 +14,25 @@ class SamplerTestClass:
             sampler(SQUARE, [0, 0, 0])
 
     def test_equal_seeds_return_identical_chains(self, sampler):
-        chain1 = sampler(SQUARE, [0, 0], random_state=1)
-        chain2 = sampler(SQUARE, [0, 0], random_state=1)
+        chain = sampler(SQUARE, [0, 0])
 
-        np.testing.assert_allclose(chain1.sample(5), chain2.sample(5))
+        np.testing.assert_allclose(
+            chain.sample(5, random_state=1),
+            chain.sample(5, random_state=1)
+        )
 
     def test_distinct_seeds_return_distinct_chains(self, sampler):
-        chain1 = sampler(SQUARE, [0, 0], random_state=1)
-        samples1 =  chain1.sample(5)
+        chain = sampler(SQUARE, [0, 0])
 
-        chain2 = sampler(SQUARE, [0, 0], random_state=2)
-        samples2 = chain2.sample(5)
-
-        assert not np.allclose(samples1, samples2)
+        assert not np.allclose(
+            chain.sample(5, random_state=1),
+            chain.sample(5, random_state=2)
+        )
 
     def test_initial_sample_remains_unaltered_after_sampling(self, sampler):
         initial_sample = np.zeros(2)
 
-        chain = sampler(SQUARE, initial_sample, random_state=1)
+        chain = sampler(SQUARE, initial_sample)
         chain.sample(1)
 
         np.testing.assert_allclose(initial_sample, np.zeros(2))
