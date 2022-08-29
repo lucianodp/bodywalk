@@ -75,10 +75,14 @@ class MarkovChain:
             current_sample = self.__advance(current_sample, n=1, random_state=random_state)
             yield current_sample
 
-    def sample(self, n: int = 1, warmup: int = 1, thin: int = 1, random_state: RandomStateLike = None) -> np.ndarray:
-        """Returns a collections of samples from the Markov Chain. Given a Markov Chain {x[0], x[1], x[2], ...},
+    def sample(
+        self,
+        n: int = 1, warmup: int = 1, thin: int = 1, chains: int = 1,
+        random_state: RandomStateLike = None) -> np.ndarray:
+        """Returns a collection of samples from the Markov Chain. Given a Markov Chain {x[0], x[1], x[2], ...},
         a number of samples to compute "n", and a 'warmup' and 'thin' parameters, we return all samples on the
-        form x[warmup + i * thin] for 0 <= i < n.
+        form x[warmup + i * thin] for 0 <= i < n. If the 'chains' parameter is also supplied, then independent
+        Markov Chains will be generated from this sample.
 
         Parameters
         ----------
@@ -90,6 +94,8 @@ class MarkovChain:
             making it usually effective to ignore those.
         thin : int, optional
             Number of samples to skip before , by default 1
+        chains: int, optional
+            Number of independent chains to sample
         random_state : None (default), int, or np.random.Generator instance
             The random number generator instance. It can be specified in 3 ways:
                 - None: creates a new RandomState instance with unspecified seed
@@ -99,7 +105,9 @@ class MarkovChain:
         Returns
         -------
         np.ndarray
-            A 2-dimensional numpy array in which row "i" corresponds to sample x[warmup + i * thin]
+            A 3-dimensional numpy array of shape (chains, n, self.dim) containing all generated samples.
+            If chains=1, then the output is reshaped to (n, self.dim).
+            If thin=1, then the output is reshaped to (chains, self.dim).
 
         Raises
         ------
@@ -115,12 +123,19 @@ class MarkovChain:
         if thin <= 0:
             raise ValueError(f"'thin' value must be positive, but got {thin}")
 
+        if chains <= 0:
+            raise ValueError(f"'chains' value must be positive, but got {chains}")
+
         random_state = check_random_state(random_state)
 
-        samples = np.empty((n, self.dim))
-        samples[0] = self.__advance(self._initial_sample, warmup, random_state)
-        for i in range(1, n):
-            samples[i] = self.__advance(samples[i-1], thin, random_state)
+        samples = np.empty((chains, n, self.dim))
+        for i in range(chains):
+            samples[i, 0] = self.__advance(self._initial_sample, warmup, random_state)
+            for j in range(1, n):
+                samples[i, j] = self.__advance(samples[i, j-1], thin, random_state)
+
+        if chains == 1 or thin == 1:
+            samples = samples.reshape((-1, self.dim))
 
         return samples
 
