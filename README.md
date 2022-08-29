@@ -15,12 +15,15 @@ convex_body = Polytope([[1, 0], [-1, 0], [0, 1], [0, -1]], [0.5]*4)  # Square of
 initial_sample = [0, 0]  # Initial point to start the Markov Chain
 random_state = 42  # RNG seed
 
-chain = ball_walk(convex_body, initial_sample, delta=0.5, random_state=random_state)
-# chain = billiard_walk(convex_body, initial_sample, tau=0.5, random_state=random_state)
-# chain = hit_and_run(convex_body, initial_sample, random_state=random_state)
+chain = ball_walk(convex_body, initial_sample, delta=0.5)
+# chain = billiard_walk(convex_body, initial_sample, tau=0.5)
+# chain = hit_and_run(convex_body, initial_sample)
 
-for sample in chain:
-  # process the new generated sample
+for sample in chain.generate(random_state):
+  # process the samples one-by-one
+
+# generate a batch of 10 samples, ignoring the first 100
+samples = chain.sample(n=10, warmup=100, random_state=random_state)
 ```
 
 # Dependencies
