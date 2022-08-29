@@ -74,7 +74,7 @@ class MarkovChain:
 
     def sample(
         self,
-        n: int = 1, warmup: int = 1, thin: int = 1, chains: int = 1,
+        n: int = 1, warmup: int = 0, thin: int = 1, chains: int = 1,
         random_state: RandomStateLike = None) -> np.ndarray:
         """Returns a collection of samples from the Markov Chain. Given a Markov Chain {x[0], x[1], x[2], ...},
         a number of samples to compute "n", and a 'warmup' and 'thin' parameters, we return all samples on the
@@ -127,7 +127,7 @@ class MarkovChain:
 
         samples = np.empty((chains, n, self.dim))
         for i in range(chains):
-            samples[i, 0] = self.__advance(self._initial_sample, warmup, random_state)
+            samples[i, 0] = self.__advance(self._initial_sample, warmup+1, random_state)
             for j in range(1, n):
                 samples[i, j] = self.__advance(samples[i, j-1], thin, random_state)
 
