@@ -12,14 +12,12 @@ StepFunction = Callable[[ConvexBody, np.ndarray, np.random.Generator], np.ndarra
 class MarkovChain:
     """Class representing a Markov Chain over a ConvexBody."""
 
-    def __init__(self, step_function: StepFunction,
+    def __init__(self,
                  body: ConvexBody,
                  initial_point: ArrayLike):
         """
         Parameters
         ----------
-        step_function : StepFunction
-            Function generating the next sample of the Markov Chain
         body : ConvexBody
             ConvexBody object to sample from
         initial_point : ArrayLike
@@ -40,7 +38,6 @@ class MarkovChain:
 
         self._body = body
         self._initial_sample = initial_point
-        self._step_function = step_function
 
     @property
     def dim(self) -> int:
@@ -143,7 +140,24 @@ class MarkovChain:
         """Advances the Markov Chain to the next sample."""
         for _ in range(n):
             current_sample = self._step_function(
-                self._body, current_sample, random_state
+                current_sample, random_state
             )
 
         return current_sample
+
+    def _step_function(self, sample: np.ndarray, random_state: np.random.Generator) -> np.ndarray:
+        """Function generating the next step in the Markov Chain
+
+        Parameters
+        ----------
+        sample : np.ndarray
+            Current state of the Markov Chain
+        random_state : np.random.Generator
+            Random number generator object
+
+        Returns
+        -------
+        np.ndarray
+            The next sample in the Markov Chain
+        """
+        raise NotImplementedError()
